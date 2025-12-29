@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpServer>
+#include "serverworker.h"
 
 class ChatServer : public QTcpServer
 {
@@ -12,9 +13,14 @@ public:
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
+    QVector<ServerWorker *>m_clients;
+
+signals:
+    void logMessage (const QString&msg);
 
 public slots:
     void stopServer();
+
 };
 
 #endif // CHATSERVER_H
