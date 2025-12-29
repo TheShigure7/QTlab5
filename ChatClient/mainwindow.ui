@@ -6,25 +6,281 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>701</width>
+    <height>333</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>聊天室客户端</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>18</height>
-    </rect>
-   </property>
+  <property name="styleSheet">
+   <string notr="true">MainWindow {
+    background-color: #F8F9FA; /* 浅灰底色，和登录框/标题栏区分 */
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="titleLabel">
+      <property name="styleSheet">
+       <string notr="true">#titleLabel {
+   /* 渐变绿背景：从浅绿到深绿的横向渐变 */
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2E7D32, stop:1 #81C784);
+    /* 文字样式：加粗+大号字体+白色（和绿背景对比度高） */
+    font: 900 22pt &quot;微软雅黑&quot;;
+    color: white;
+    /* 填充+居中：让文字不贴边 */
+    padding: 10px 20px;
+    text-align: center;
+    /* 可选：轻微圆角让边缘更柔和 */
+    border-radius: 4px;
+}
+
+
+</string>
+      </property>
+      <property name="text">
+       <string>张育城的聊天室</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="loginPage">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>29</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>208</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QFrame" name="chatFrame">
+          <property name="styleSheet">
+           <string notr="true">/* 外层容器（QFrame）：浅绿底色+大圆角+柔和阴影 */
+#loginFrame {
+    background-color: #F0FFF4; /* 淡绿背景 */
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(102, 187, 106, 0.15); /* 浅绿阴影 */
+}
+
+/* 标签（服务器地址/昵称）：清新绿+活泼字体 */
+#label_2 {
+    font: 11pt &quot;微软雅黑&quot;;
+    color: #2E7D32; /* 深绿文字 */
+    margin-bottom: 6px;
+}
+#label_3 {
+    font: 11pt &quot;微软雅黑&quot;;
+    color: #2E7D32; /* 深绿文字 */
+    margin-bottom: 6px;
+}
+/* 输入框（QLineEdit）：浅绿边框+圆角+聚焦效果 */
+#serverEdit {
+    border: 2px solid #C8E6C9; /* 淡绿边框 */
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: 10pt &quot;微软雅黑&quot;;
+    background-color: #FFFFFF;
+}
+
+#serverEdit:focus {
+    border-color: #81C784; /* 聚焦时深一点的绿 */
+    outline: none;
+}
+
+#usernameEdit {
+    border: 2px solid #C8E6C9; /* 淡绿边框 */
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: 10pt &quot;微软雅黑&quot;;
+    background-color: #FFFFFF;
+}
+
+
+
+#usernameEdit:focus {
+    border-color: #81C784; /* 聚焦时深一点的绿 */
+    outline: none;
+}
+
+/* 登录按钮（QPushButton）：渐变绿+圆角+交互反馈 */
+#loginButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #81C784, stop:1 #4CAF50); /* 渐变绿 */
+    color: white;
+    font: 700 11pt &quot;微软雅黑&quot;;
+    border-radius: 8px;
+    padding: 10px 0;
+    border: none;
+}
+#loginButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4CAF50, stop:1 #388E3C); /* 悬停加深 */
+}
+#loginButton:pressed {
+    background-color: #388E3C; /* 按下时纯色深绿 */
+}</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>服务器地址：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="serverEdit"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>昵称：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="usernameEdit"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Policy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>10</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="loginButton">
+             <property name="text">
+              <string>登录</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>208</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="1">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>29</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="chatPage">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QTextEdit" name="roomTextEdit"/>
+          </item>
+          <item>
+           <widget class="QListWidget" name="userListWidget">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="sayLineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="sayButton">
+            <property name="text">
+             <string>发送</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="logoutButton">
+            <property name="text">
+             <string>退出</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

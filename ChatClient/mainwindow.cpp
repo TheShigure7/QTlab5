@@ -11,4 +11,23 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
+
+void MainWindow::on_loginButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->chatPage);
+}
+
+
+void MainWindow::on_sayButton_clicked()
+{
+
+}
+
+
+void MainWindow::on_logoutButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
+
