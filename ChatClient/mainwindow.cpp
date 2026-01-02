@@ -41,6 +41,12 @@ void MainWindow::on_logoutButton_clicked()
     m_chatClient->disconnectFromHost();
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 
+    for (auto aItem : ui->userListWidget->findItems(ui->usernameEdit->text(), Qt::MatchExactly)) {
+        qDebug("remove");
+        ui->userListWidget->removeItemWidget(aItem);
+        delete aItem;
+    }
+
 }
 
 void MainWindow::connectedToServer()
@@ -75,9 +81,6 @@ void MainWindow::jsonReceived(const QJsonObject &docObj)
         if (senderVal.isNull() || !senderVal.isString())
             return;
 
-
-
-
         messageReceived(senderVal.toString(),textVal.toString());
 
 
@@ -87,11 +90,28 @@ void MainWindow::jsonReceived(const QJsonObject &docObj)
             return;
 
         userJoined(usernameVal.toString());
+
+
+    } else if (typeVal.toString().compare("userdisconnected", Qt::CaseInsensitive) == 0) {
+        const QJsonValue usernameVal = docObj.value("username");
+        if (usernameVal.isNull() || !usernameVal.isString())
+            return;
+
+        userLeft(usernameVal.toString());
     }
 }
 
 void MainWindow::userJoined(const QString &user)
 {
     ui->userListWidget->addItem(user);
+}
+
+void MainWindow::userLeft(const QString &user)
+{
+    for (auto aItem : ui->userListWidget->findItems(user, Qt::MatchExactly)) {
+        qDebug("remove");
+        ui->userListWidget->removeItemWidget(aItem);
+        delete aItem; // 需移至循环内，确保每个项都被销毁
+    }
 }
 
