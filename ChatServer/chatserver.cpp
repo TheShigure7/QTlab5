@@ -18,6 +18,7 @@ void ChatServer::incomingConnection(qintptr socketDescriptor)
     }
     connect(worker,&ServerWorker::logMessage,this,&ChatServer::logMessage);
     connect(worker,&ServerWorker::jsonReceived,this,&ChatServer::jsonReceived);
+    connect(worker, &ServerWorker::disconnectedFromClient, this,std::bind(&ChatServer::userDisconnected, this, worker));
     m_clients.append(worker);
     emit logMessage("新的用户连接上了");
 
@@ -67,4 +68,18 @@ void ChatServer::jsonReceived(ServerWorker *sender, const QJsonObject &docObj)
         connectedMessage["username"] = usernameVal.toString();
         broadcast(connectedMessage, sender);
     }
+}
+
+void ChatServer::userDisconnected(ServerWorker *sender)
+{
+    m_clients.removeAll(sender);
+    const QString userName = sender->userName();
+    if (!userName.isEmpty()) {
+        QJsonObject disconnectedMessage;
+        disconnectedMessage["type"] = "userdisconnected";
+        disconnectedMessage["username"] = userName;
+        broadcast(disconnectedMessage, nullptr);
+        emit logMessage(userName + " disconnected");
+    }
+    sender->deleteLater();
 }
