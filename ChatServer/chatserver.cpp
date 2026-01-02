@@ -2,6 +2,7 @@
 #include "serverworker.h"
 #include <QJsonValue>
 #include <QJsonObject>
+#include <QJsonArray>
 
 ChatServer::ChatServer(QObject *parent):
     QTcpServer(parent)
@@ -67,6 +68,20 @@ void ChatServer::jsonReceived(ServerWorker *sender, const QJsonObject &docObj)
         connectedMessage["type"] = "newuser";
         connectedMessage["username"] = usernameVal.toString();
         broadcast(connectedMessage, sender);
+
+        // send user list to new logined user
+        QJsonObject userListMessage;
+        userListMessage["type"] = "userlist";
+        QJsonArray userlist;
+        for (ServerWorker *worker : m_clients) {
+            if (worker == sender)
+                userlist.append(worker->userName() + "*"); // 标记当前新登录用户
+            else
+                userlist.append(worker->userName());
+        }
+        userListMessage["userlist"] = userlist;
+        sender->sendJosn(userListMessage);
+
     }
 }
 
